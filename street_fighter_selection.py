@@ -19,6 +19,41 @@ def street_fighter_selection_v1(fighters, initial_position, moves):
     return hovered
 
 
+def get_x_position(x, x_min, x_max):
+    if x < x_min:
+        return x_max
+    elif x > x_max:
+        return x_min
+    return x
+
+
+def get_y_position(y, y_min, y_max):
+    if y < y_min:
+        return y_min
+    elif y > y_max:
+        return y_max
+    return y
+
+
+def get_next_position(position, gain, min_position, max_position):
+    y, x = tuple(map(sum, zip(position, gain)))
+    min_y, min_x = min_position
+    max_y, max_x = max_position
+    return get_y_position(y, min_y, max_y), get_x_position(x, min_x, max_x)
+
+
+def street_fighter_selection_v2(fighters, initial_position, moves):
+    hovered = []
+    position = initial_position
+    min_position = (0, 0)
+    max_position = (len(fighters) - 1, len(fighters[0]) - 1)
+    move_to_gain = {'up': (-1, 0), 'down': (1, 0), 'left': (0, -1), 'right': (0, 1)}
+    for move in moves:
+        position = get_next_position(position, move_to_gain[move], min_position, max_position)
+        hovered.append(fighters[position[0]][position[1]])
+    return hovered
+
+
 fighters = [
     ["Ryu", "E.Honda", "Blanka", "Guile", "Balrog", "Vega"],
     ["Ken", "Chun Li", "Zangief", "Dhalsim", "Sagat", "M.Bison"]
@@ -26,7 +61,7 @@ fighters = [
 opts = ["up", "down", "right", "left"]
 
 
-street_fighter_selection = street_fighter_selection_v1
+street_fighter_selection = street_fighter_selection_v2
 
 
 moves = []
